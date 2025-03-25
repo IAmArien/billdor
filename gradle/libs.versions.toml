@@ -22,6 +22,7 @@ room = "2.6.1"
 roomKtxPaging = "2.6.1"
 kspDevtools = "2.0.21-1.0.27"
 daggerHilt = "2.38.1"
+navigation = "2.8.9"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -59,6 +60,7 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtxP
 room-paging = { group = "androidx.room", name = "room-paging", version.ref = "roomKtxPaging" }
 dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt" }
 dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "daggerHilt" }
+navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -10,4 +10,7 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
-val CoolWhite = Color(0xF5F8FCFF)
+val CoolWhite = Color(0xFFF5F8FC)
+val SelectiveYellow = Color(0xFFFFB509)
+val SilverSand = Color(0x8CBCC1C7)
+val RollingStone = Color(0xFF77797B)
