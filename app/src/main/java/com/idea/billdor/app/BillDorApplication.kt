@@ -1,10 +1,14 @@
 package com.idea.billdor.app
 
 import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
+import timber.log.Timber
 
+@HiltAndroidApp
 class BillDorApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        Timber.plant(Timber.DebugTree())
     }
 }
