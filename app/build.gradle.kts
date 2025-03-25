@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlin.ksp)
 }
 
 android {
@@ -56,4 +58,42 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Coroutines
+    implementation(libs.org.jetbrains.kotlinx.coroutines.core)
+    implementation(libs.org.jetbrains.android.coroutines.android)
+
+    // TIMBER FOR LOGGING
+    implementation(libs.timber.logging)
+
+    // RETROFIT, G-SON AND RETROFIT-MOSHI CONVERTER
+    implementation(libs.squareup.retrofit)
+    implementation(libs.squareup.retrofit.gson)
+    implementation(libs.squareup.retrofit.moshi)
+
+    // MOSHI for parsing the JSON format
+    implementation(libs.squareup.moshi)
+
+    // OK-HTTP CLIENT
+    implementation(libs.ok.http.client)
+
+    // ViewModel and LiveData (arch components)
+    implementation(libs.viewmodel.saved.state)
+    implementation(libs.viewmodel.ktx)
+    implementation(libs.viewmodel.compose)
+    implementation(libs.runtime.compose)
+    implementation(libs.livedata.ktx)
+    ksp(libs.lifecycle.compiler)
+
+    // Room database
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
+
+    // Kotlin Extensions and Coroutines support for Room
+    implementation(libs.room.ktx)
+    implementation(libs.room.paging)
+
+    // Dagger Hilt
+    implementation(libs.dagger.hilt)
+    ksp(libs.dagger.hilt.compiler)
 }

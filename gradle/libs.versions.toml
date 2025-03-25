@@ -1,5 +1,6 @@
 [versions]
 agp = "8.9.0"
+hiltAndroidGradlePlugin = "2.38.1"
 kotlin = "2.0.21"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -8,9 +9,23 @@ espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
 composeBom = "2024.09.00"
+coroutinesCore = "1.7.3"
+coroutinesAndroid = "1.7.3"
+timber = "5.0.1"
+retrofit = "2.9.0"
+retrofitGson = "2.9.0"
+retrofitMoshi = "2.9.0"
+moshiKotlin = "1.13.0"
+okHttpClient = "5.0.0-alpha.3"
+lifecycleVersion = "2.8.7"
+room = "2.6.1"
+roomKtxPaging = "2.6.1"
+kspDevtools = "2.0.21-1.0.27"
+daggerHilt = "2.38.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltAndroidGradlePlugin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -24,9 +39,30 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+org-jetbrains-kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutinesCore" }
+org-jetbrains-android-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutinesAndroid" }
+timber-logging = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+squareup-retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofitGson" }
+squareup-retrofit-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofitMoshi" }
+squareup-moshi = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshiKotlin" }
+ok-http-client = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okHttpClient" }
+viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleVersion" }
+viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleVersion" }
+runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleVersion" }
+livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleVersion" }
+viewmodel-saved-state = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-savedstate", version.ref = "lifecycleVersion" }
+lifecycle-compiler = { group = "androidx.lifecycle", name = "lifecycle-compiler", version.ref = "lifecycleVersion" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtxPaging" }
+room-paging = { group = "androidx.room", name = "room-paging", version.ref = "roomKtxPaging" }
+dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt" }
+dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "daggerHilt" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
+kotlin-kapt = { id = "kotlin-kapt" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kspDevtools" }
