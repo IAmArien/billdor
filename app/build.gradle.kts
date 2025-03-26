@@ -99,4 +99,8 @@ dependencies {
 
     // Compose Navigation (NavHost)
     implementation(libs.navigation.compose)
+
+    // Accompanist
+    implementation(libs.accompanist.insets)
+    implementation(libs.accompanist.insets.ui)
 }

@@ -1,4 +1,5 @@
 [versions]
+accompanistInsets = "0.22.0-rc"
 agp = "8.9.0"
 hiltAndroidGradlePlugin = "2.38.1"
 kotlin = "2.0.21"
@@ -25,6 +26,8 @@ daggerHilt = "2.38.1"
 navigation = "2.8.9"
 
 [libraries]
+accompanist-insets = { module = "com.google.accompanist:accompanist-insets", version.ref = "accompanistInsets" }
+accompanist-insets-ui = { module = "com.google.accompanist:accompanist-insets-ui", version.ref = "accompanistInsets" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltAndroidGradlePlugin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
