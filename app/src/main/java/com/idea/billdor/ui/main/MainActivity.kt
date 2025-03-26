@@ -21,6 +21,7 @@ import com.idea.billdor.ui.theme.BillDorTheme
 import com.idea.billdor.ui.theme.CoolWhite
 import com.idea.billdor.viewmodels.navigation.BottomAppBarViewModel
 import com.idea.billdor.viewmodels.navigation.state.BottomAppBarState
+import com.idea.billdor.viewmodels.recipes.RecipesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,6 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity(), ITopAppBarNavigation, IBottomAppBarNavigation {
 
     private val bottomAppBarViewModel by viewModels<BottomAppBarViewModel>()
+    private val recipesViewModel by viewModels<RecipesViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,15 +48,20 @@ class MainActivity : ComponentActivity(), ITopAppBarNavigation, IBottomAppBarNav
                     BottomAppBarNavigation(
                         bottomAppBarViewModel,
                         navHostController,
-                        this@MainActivity
+                        this
                     )
                 }
             ) { paddingValues ->
-                MainNavigation(navHostController, paddingValues)
+                MainNavigation(
+                    navHostController,
+                    bottomAppBarViewModel,
+                    recipesViewModel,
+                    paddingValues
+                )
             }
         }
     }
-    
+
     override fun onNavigationIconClick() { }
     
     override fun onSearchFieldClick() { }
