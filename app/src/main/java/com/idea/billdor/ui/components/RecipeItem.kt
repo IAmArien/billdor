@@ -44,10 +44,15 @@ import com.idea.billdor.ui.theme.RollingStone
 import com.idea.billdor.ui.theme.SelectiveYellow
 import com.idea.billdor.ui.theme.SilverSand
 import com.idea.billdor.ui.theme.White
+import com.idea.core.recipes.data.Recipe
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun RecipeItem(modifier: Modifier = Modifier) {
+fun RecipeItem(
+    modifier: Modifier = Modifier,
+    recipeItem: Recipe,
+    onClick: ((item: Recipe) -> Unit)? = null
+) {
     Column(
         modifier = modifier
             .wrapContentHeight()
@@ -61,17 +66,19 @@ fun RecipeItem(modifier: Modifier = Modifier) {
                 shape = RoundedCornerShape(12.dp)
             )
             .clip(RoundedCornerShape(12.dp))
-            .clickable {}
+            .clickable(enabled = true) {
+                onClick?.invoke(recipeItem)
+            }
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(120.dp)
+                .height(130.dp)
                 .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data("https://cdn.dummyjson.com/recipe-images/1.webp")
+                    .data(recipeItem.image)
                     .crossfade(true)
                     .build(),
                 contentDescription = "recipe-async-image",
@@ -80,7 +87,7 @@ fun RecipeItem(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
                     .fillMaxWidth()
-                    .height(120.dp)
+                    .height(130.dp)
             )
             Row(
                 modifier = Modifier
@@ -107,7 +114,7 @@ fun RecipeItem(modifier: Modifier = Modifier) {
                             modifier = Modifier.size(15.dp)
                         )
                         Text(
-                            text = "4.6",
+                            text = "${recipeItem.rating}",
                             style = TextStyle(
                                 color = DarkLiver,
                                 fontSize = 12.sp,
@@ -128,7 +135,7 @@ fun RecipeItem(modifier: Modifier = Modifier) {
                 .padding(10.dp)
         ) {
             Text(
-                text = "Classic Margherita Pizza",
+                text = recipeItem.name,
                 style = TextStyle(
                     color = DarkLiver,
                     fontSize = 14.sp,
@@ -139,61 +146,70 @@ fun RecipeItem(modifier: Modifier = Modifier) {
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                modifier = Modifier.wrapContentWidth(unbounded = false)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .wrapContentWidth()
-                        .wrapContentHeight()
-                        .border(
-                            width = 1.dp,
-                            color = SilverSand,
-                            shape = RoundedCornerShape(6.dp)
-                        )
+            if (recipeItem.tags.isNotEmpty()) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    modifier = Modifier.wrapContentWidth(unbounded = false)
                 ) {
-                    Text(
-                        text = "Pizza",
-                        style = TextStyle(
-                            color = RollingStone,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal,
-                            fontFamily = FontFamily
-                        ),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 3.dp)
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .wrapContentWidth()
-                        .wrapContentHeight()
-                        .border(
-                            width = 1.dp,
-                            color = SilverSand,
-                            shape = RoundedCornerShape(6.dp)
-                        )
-                ) {
-                    Text(
-                        text = "Italian",
-                        style = TextStyle(
-                            color = RollingStone,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Normal,
-                            fontStyle = FontStyle.Normal,
-                            fontFamily = FontFamily
-                        ),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 3.dp)
-                    )
+                    recipeItem.tags.forEach { tagItem ->
+                        Box(
+                            modifier = Modifier
+                                .wrapContentWidth()
+                                .wrapContentHeight()
+                                .border(
+                                    width = 1.dp,
+                                    color = SilverSand,
+                                    shape = RoundedCornerShape(6.dp)
+                                )
+                        ) {
+                            Text(
+                                text = tagItem,
+                                style = TextStyle(
+                                    color = RollingStone,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    fontFamily = FontFamily
+                                ),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 3.dp)
+                            )
+                        }
+                    }
                 }
             }
             Text(
-                text = "Pizza dough, Tomato sauce, Fresh mozzarella cheese, Fresh basil leaves",
+                text = buildAnnotatedString {
+                    recipeItem.ingredients.forEachIndexed { index, ingredientItem ->
+                        if (index.plus(1) == recipeItem.ingredients.size) {
+                            withStyle(
+                                style = SpanStyle(
+                                    color = RollingStone,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    fontFamily = FontFamily
+                                ),
+                            ) {
+                                append(ingredientItem)
+                            }
+                        } else {
+                            withStyle(
+                                style = SpanStyle(
+                                    color = RollingStone,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    fontFamily = FontFamily
+                                ),
+                            ) {
+                                append(ingredientItem)
+                                append(", ")
+                            }
+                        }
+                    }
+                },
                 style = TextStyle(
                     color = RollingStone,
                     fontSize = 12.sp,
@@ -210,111 +226,117 @@ fun RecipeItem(modifier: Modifier = Modifier) {
                     .fillMaxWidth()
                     .wrapContentHeight()
             ) {
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle(
-                                color = Black,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal,
-                                fontFamily = FontFamily
-                            )
-                        ) {
-                            append(text = "Calories per serving: ")
-                        }
-                        withStyle(
-                            style = SpanStyle(
-                                color = RollingStone,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal,
-                                fontFamily = FontFamily
-                            )
-                        ) {
-                            append(text = "300g")
-                        }
-                    },
-                    style = TextStyle(
-                        color = RollingStone,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Normal,
-                        fontStyle = FontStyle.Normal,
-                        fontFamily = FontFamily
-                    ),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle(
-                                color = Black,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal,
-                                fontFamily = FontFamily
-                            )
-                        ) {
-                            append(text = "Cuisine: ")
-                        }
-                        withStyle(
-                            style = SpanStyle(
-                                color = RollingStone,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal,
-                                fontFamily = FontFamily
-                            )
-                        ) {
-                            append(text = "Italian")
-                        }
-                    },
-                    style = TextStyle(
-                        color = RollingStone,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Normal,
-                        fontStyle = FontStyle.Normal,
-                        fontFamily = FontFamily
-                    ),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle(
-                                color = Black,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal,
-                                fontFamily = FontFamily
-                            )
-                        ) {
-                            append(text = "Difficulty: ")
-                        }
-                        withStyle(
-                            style = SpanStyle(
-                                color = RollingStone,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Normal,
-                                fontStyle = FontStyle.Normal,
-                                fontFamily = FontFamily
-                            )
-                        ) {
-                            append(text = "Easy")
-                        }
-                    },
-                    style = TextStyle(
-                        color = RollingStone,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Normal,
-                        fontStyle = FontStyle.Normal,
-                        fontFamily = FontFamily
-                    ),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
+                recipeItem.caloriesPerServing?.let { caloriesPerServing ->
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(
+                                style = SpanStyle(
+                                    color = Black,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    fontFamily = FontFamily
+                                )
+                            ) {
+                                append(text = "Calories per serving: ")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    color = RollingStone,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    fontFamily = FontFamily
+                                )
+                            ) {
+                                append(text = "${caloriesPerServing}g")
+                            }
+                        },
+                        style = TextStyle(
+                            color = RollingStone,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontStyle = FontStyle.Normal,
+                            fontFamily = FontFamily
+                        ),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                recipeItem.cuisine?.let { cuisine->
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(
+                                style = SpanStyle(
+                                    color = Black,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    fontFamily = FontFamily
+                                )
+                            ) {
+                                append(text = "Cuisine: ")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    color = RollingStone,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    fontFamily = FontFamily
+                                )
+                            ) {
+                                append(text = cuisine)
+                            }
+                        },
+                        style = TextStyle(
+                            color = RollingStone,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontStyle = FontStyle.Normal,
+                            fontFamily = FontFamily
+                        ),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                recipeItem.difficulty?.let { difficulty ->
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(
+                                style = SpanStyle(
+                                    color = Black,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    fontFamily = FontFamily
+                                )
+                            ) {
+                                append(text = "Difficulty: ")
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    color = RollingStone,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    fontStyle = FontStyle.Normal,
+                                    fontFamily = FontFamily
+                                )
+                            ) {
+                                append(text = difficulty)
+                            }
+                        },
+                        style = TextStyle(
+                            color = RollingStone,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontStyle = FontStyle.Normal,
+                            fontFamily = FontFamily
+                        ),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
         }
     }

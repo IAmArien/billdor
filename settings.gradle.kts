@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "BillDor"
 include(":app")
- 
+include(":core")

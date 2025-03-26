@@ -12,6 +12,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.google.gson.Gson
+import com.idea.billdor.mocks.mockRecipeResponse
 import com.idea.billdor.ui.components.BottomAppBarNavigation
 import com.idea.billdor.ui.components.IBottomAppBarNavigation
 import com.idea.billdor.ui.components.ITopAppBarNavigation
@@ -22,6 +24,7 @@ import com.idea.billdor.ui.theme.CoolWhite
 import com.idea.billdor.viewmodels.navigation.BottomAppBarViewModel
 import com.idea.billdor.viewmodels.navigation.state.BottomAppBarState
 import com.idea.billdor.viewmodels.recipes.RecipesViewModel
+import com.idea.core.recipes.data.Recipes
 import dagger.hilt.android.AndroidEntryPoint
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,6 +38,9 @@ class MainActivity : ComponentActivity(), ITopAppBarNavigation, IBottomAppBarNav
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent { BillDorTheme { InternalMainScreenBuilder() } }
+        recipesViewModel.setRecipeList(
+            Gson().fromJson(mockRecipeResponse, Recipes::class.java).recipes
+        )
     }
 
     @Composable

@@ -21,7 +21,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.idea.billdor.ui.theme.FontFamily
 import com.idea.billdor.ui.theme.RollingStone
 import com.idea.billdor.ui.theme.SilverSand
 import com.idea.billdor.ui.theme.White
@@ -68,7 +73,13 @@ fun TopAppBarNavigation(callback: ITopAppBarNavigation) {
                 )
                 Text(
                     text = "Search",
-                    color = RollingStone,
+                    style = TextStyle(
+                        color = RollingStone,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Normal,
+                        fontStyle = FontStyle.Normal,
+                        fontFamily = FontFamily
+                    ),
                     modifier = Modifier
                         .testTag(tag = "text-search-label")
                         .align(Alignment.CenterVertically)

@@ -17,8 +17,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -29,17 +29,12 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.idea.billdor.R
 import com.idea.billdor.ui.components.RecipeItem
-import com.idea.billdor.ui.theme.Black
 import com.idea.billdor.ui.theme.BridalHealth
-import com.idea.billdor.ui.theme.FontFamily
+import com.idea.billdor.ui.theme.CoolWhite
 import com.idea.billdor.ui.theme.SelectiveYellow
 import com.idea.billdor.ui.theme.SilverSand
 import com.idea.billdor.ui.theme.White
@@ -134,51 +129,29 @@ private fun MealType(recipesViewModel: RecipesViewModel) {
 }
 
 @Composable
-private fun RecipesTitle(recipesViewModel: RecipesViewModel) {
-    val selectedMealType = recipesViewModel.selectedMealType.collectAsState()
-    Column(modifier = Modifier.background(color = White)) {
-        Text(
-            text = selectedMealType.value.label,
-            style = TextStyle(
-                color = Black,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontStyle = FontStyle.Normal,
-                fontFamily = FontFamily
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    top = 12.dp,
-                    bottom = 12.dp,
-                    start = 12.dp,
-                    end = 12.dp
-                )
-        )
-    }
-}
-
-@Composable
 fun RecipesScreen(recipesViewModel: RecipesViewModel = viewModel<RecipesViewModel>()) {
+    val recipeList = recipesViewModel.recipeList.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
+            .background(color = CoolWhite)
     ) {
         MealType(recipesViewModel)
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Fixed(2),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalItemSpacing = 12.dp,
             modifier = Modifier
                 .padding(start = 12.dp, end = 12.dp)
                 .nestedScroll(rememberNestedScrollInteropConnection())
         ) {
-            items(2) { Box(Modifier) }
-            items(10) {
-                RecipeItem()
+            items(2) { Box(Modifier.padding(bottom = 12.dp)) }
+            items(recipeList.value) { recipe ->
+                RecipeItem(
+                    recipeItem = recipe,
+                    modifier = Modifier.padding(bottom = 12.dp)
+                )
             }
-            items(2) { Box(Modifier) }
         }
     }
 }
