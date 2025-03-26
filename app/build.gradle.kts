@@ -103,4 +103,9 @@ dependencies {
     // Accompanist
     implementation(libs.accompanist.insets)
     implementation(libs.accompanist.insets.ui)
+
+    // Coil Compose
+    implementation(libs.glide.compose)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 }

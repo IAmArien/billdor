@@ -19,9 +19,9 @@ fun Divider(
     orientation: DividerOrientation = DividerOrientation.Horizontal
 ) {
     val reusableModifier = if (orientation === DividerOrientation.Horizontal) {
-        modifier.height(12.dp).testTag(tag = "divider")
-    } else {
         modifier.width(12.dp).testTag(tag = "divider")
+    } else {
+        modifier.height(12.dp).testTag(tag = "divider")
     }
     Box(reusableModifier)
 }
