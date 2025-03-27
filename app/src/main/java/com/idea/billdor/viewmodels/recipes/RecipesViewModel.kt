@@ -8,6 +8,7 @@ import com.idea.billdor.viewmodels.recipes.state.RecipeState
 import com.idea.core.ResponseWrapper
 import com.idea.core.recipes.data.Recipes
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,29 +28,53 @@ class RecipesViewModel @Inject constructor(private val useCases: RecipesUseCases
     val recipeState: StateFlow<RecipeState>
         get() = _recipeState
 
+    private val _errorEncountered: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val errorEncountered: StateFlow<Boolean>
+        get() = _errorEncountered
+
+    private var recipesCoroutineJob: Job? = null
+
     fun getAllRecipesAsync() {
-        _recipeState.value = RecipeState.Loading
-        viewModelScope.launch {
+        recipesCoroutineJob?.cancel()
+        recipesCoroutineJob = viewModelScope.launch {
+            _recipeState.value = RecipeState.Loading
             when (val response = useCases.getAllRecipesAsync.invoke()) {
                 is ResponseWrapper.ResponseSuccess<Recipes> -> {
-                    _recipeState.value = RecipeState.Success(response.value)
+                    _recipeState.value = RecipeState.Success(
+                        response = Recipes(
+                            recipes = response.value.recipes.sortedBy { it.id },
+                            total = response.value.recipes.size.toLong(),
+                            skip = 0,
+                            limit = 10
+                        )
+                    )
                 }
                 else -> {
-                    _recipeState.value = RecipeState.Failure(null)
+                    setErrorEncountered(error = true)
+                    getLocalRecipes()
                 }
             }
         }
     }
 
     fun getMealRecipesAsync(meal: String) {
-        _recipeState.value = RecipeState.Loading
-        viewModelScope.launch {
+        recipesCoroutineJob?.cancel()
+        recipesCoroutineJob = viewModelScope.launch {
+            _recipeState.value = RecipeState.Loading
             when (val response = useCases.getMealRecipesAsync.invoke(meal = meal)) {
                 is ResponseWrapper.ResponseSuccess<Recipes> -> {
-                    _recipeState.value = RecipeState.Success(response.value)
+                    _recipeState.value = RecipeState.Success(
+                        response = Recipes(
+                            recipes = response.value.recipes.sortedBy { it.id },
+                            total = response.value.recipes.size.toLong(),
+                            skip = 0,
+                            limit = 10
+                        )
+                    )
                 }
                 else -> {
-                    _recipeState.value = RecipeState.Failure(null)
+                    setErrorEncountered(error = true)
+                    getLocalMealRecipes(meal = meal)
                 }
             }
         }
@@ -62,7 +87,7 @@ class RecipesViewModel @Inject constructor(private val useCases: RecipesUseCases
                 is ResponseWrapper.ResponseSuccess -> {
                     _recipeState.value = RecipeState.Success(
                         response = Recipes(
-                            recipes = response.value,
+                            recipes = response.value.sortedBy { it.id },
                             total = response.value.size.toLong(),
                             skip = 0,
                             limit = 10
@@ -83,7 +108,7 @@ class RecipesViewModel @Inject constructor(private val useCases: RecipesUseCases
                 is ResponseWrapper.ResponseSuccess -> {
                     _recipeState.value = RecipeState.Success(
                         response = Recipes(
-                            recipes = response.value,
+                            recipes = response.value.sortedBy { it.id },
                             total = response.value.size.toLong(),
                             skip = 0,
                             limit = 10
@@ -99,6 +124,10 @@ class RecipesViewModel @Inject constructor(private val useCases: RecipesUseCases
 
     fun setSelectedMealType(type: MealTypeState) {
         _selectedMealType.value = type
+    }
+
+    fun setErrorEncountered(error: Boolean) {
+        _errorEncountered.value = error
     }
 
     override fun onCleared() {

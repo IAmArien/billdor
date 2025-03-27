@@ -11,7 +11,7 @@ import com.idea.billdor.frameworks.database.entities.MealRecipesEntity
 import com.idea.billdor.frameworks.database.entities.RecipesEntity
 import com.idea.billdor.frameworks.database.room.converters.RecipesConverter
 
-@Database(entities = [RecipesEntity::class, MealRecipesEntity::class], version = 2)
+@Database(entities = [RecipesEntity::class, MealRecipesEntity::class], version = 3)
 @TypeConverters(RecipesConverter:: class)
 abstract class BillDorDatabase : RoomDatabase() {
 

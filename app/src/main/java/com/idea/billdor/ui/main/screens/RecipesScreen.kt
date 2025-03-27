@@ -20,6 +20,8 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -134,14 +136,33 @@ private fun MealType(recipesViewModel: RecipesViewModel) {
 }
 
 @Composable
-fun RecipesScreen(recipesViewModel: RecipesViewModel = viewModel<RecipesViewModel>()) {
+fun RecipesScreen(
+    recipesViewModel: RecipesViewModel = viewModel<RecipesViewModel>(),
+    snackBarHostState: SnackbarHostState
+) {
     val recipeState = recipesViewModel.recipeState.collectAsState().value
+    val errorEncountered = recipesViewModel.errorEncountered.collectAsState().value
     val staggeredGridState = rememberLazyStaggeredGridState()
     val reachesEnd = rememberLazyStaggeredGridReachEndState(staggeredGridState)
 
     LaunchedEffect(reachesEnd) {
         if (reachesEnd) {
             Timber.d("Reached end of the list")
+        }
+    }
+
+    LaunchedEffect(errorEncountered) {
+        if (errorEncountered) {
+            val result = snackBarHostState.showSnackbar(
+                message = "Something went wrong",
+                actionLabel = "DISMISS"
+            )
+            if (
+                result == SnackbarResult.Dismissed ||
+                result == SnackbarResult.ActionPerformed
+            ) {
+                recipesViewModel.setErrorEncountered(error = false)
+            }
         }
     }
 

@@ -2,6 +2,7 @@ package com.idea.billdor.ui.main.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -19,6 +20,7 @@ import com.idea.billdor.viewmodels.recipes.RecipesViewModel
 @Composable
 fun MainNavigation(
     navHostController: NavHostController,
+    snackBarHostState: SnackbarHostState,
     bottomAppBarViewModel: BottomAppBarViewModel = viewModel<BottomAppBarViewModel>(),
     recipesViewModel: RecipesViewModel = viewModel<RecipesViewModel>(),
     paddingValues: PaddingValues
@@ -31,7 +33,10 @@ fun MainNavigation(
         modifier = Modifier.padding(paddingValues)
     ) {
         composable(route = BottomAppBarState.Recipes().name) {
-            RecipesScreen(recipesViewModel = recipesViewModel)
+            RecipesScreen(
+                recipesViewModel = recipesViewModel,
+                snackBarHostState = snackBarHostState
+            )
         }
         composable(route = BottomAppBarState.Tags().name) {
             TagsScreen()

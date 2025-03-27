@@ -50,6 +50,7 @@ class RecipesRepository @Inject constructor(
     private suspend fun insertMealRecipes(mealType: String, response: Recipes) = safeCatching {
         db.apply {
             withTransaction {
+                recipesDao.deleteLocalMealRecipes(mealType = mealType)
                 recipesDao.insertMealRecipes(
                     recipes = response.recipes.asMealRecipesEntity(mealType = mealType)
                 )

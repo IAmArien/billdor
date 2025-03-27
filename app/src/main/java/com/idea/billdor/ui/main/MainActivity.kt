@@ -8,8 +8,11 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
@@ -45,6 +48,7 @@ class MainActivity : ComponentActivity(), ITopAppBarNavigation, IBottomAppBarNav
     @Composable
     private fun InternalMainScreenBuilder() {
         val navHostController = rememberNavController()
+        val snackBarHostState = remember { SnackbarHostState() }
         Surface(color = CoolWhite) {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
@@ -55,10 +59,12 @@ class MainActivity : ComponentActivity(), ITopAppBarNavigation, IBottomAppBarNav
                         navHostController,
                         this
                     )
-                }
+                },
+                snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
             ) { paddingValues ->
                 MainNavigation(
                     navHostController,
+                    snackBarHostState,
                     bottomAppBarViewModel,
                     recipesViewModel,
                     paddingValues
@@ -87,6 +93,7 @@ class MainActivity : ComponentActivity(), ITopAppBarNavigation, IBottomAppBarNav
         recipesViewModel.selectedMealType.collectLatest { state ->
             when (state) {
                 is MealTypeState.All -> {
+                    recipesViewModel.setErrorEncountered(error = false)
                     recipesViewModel.getAllRecipesAsync()
                     recipesViewModel.getLocalRecipes()
                 }
@@ -94,6 +101,7 @@ class MainActivity : ComponentActivity(), ITopAppBarNavigation, IBottomAppBarNav
                 is MealTypeState.Dinner,
                 is MealTypeState.Lunch,
                 is MealTypeState.Breakfast -> {
+                    recipesViewModel.setErrorEncountered(error = false)
                     recipesViewModel.getMealRecipesAsync(meal = state.type)
                     recipesViewModel.getLocalMealRecipes(meal = state.type)
                 }

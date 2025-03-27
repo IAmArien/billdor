@@ -13,7 +13,7 @@ data class RecipesEntity(
     val recipe: Recipe
 )
 
-@Entity(tableName = "MEAL_RECIPES_LIST", indices = [ Index(value = ["recipeId"], unique = true) ])
+@Entity(tableName = "MEAL_RECIPES_LIST")
 data class MealRecipesEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
@@ -23,7 +23,7 @@ data class MealRecipesEntity(
 )
 
 fun List<RecipesEntity>.asRecipeList(): List<Recipe> {
-    return map { item -> item.recipe }
+    return map { item -> item.recipe }.sortedBy { it.id }
 }
 
 fun List<Recipe>.asRecipesEntity(): List<RecipesEntity> {
@@ -33,11 +33,11 @@ fun List<Recipe>.asRecipesEntity(): List<RecipesEntity> {
             recipeId = item.id,
             recipe = item
         )
-    }
+    }.sortedBy { it.recipeId }
 }
 
 fun List<MealRecipesEntity>.asMealRecipeList(): List<Recipe> {
-    return map { item -> item.recipe }
+    return map { item -> item.recipe }.sortedBy { it.id }
 }
 
 fun List<Recipe>.asMealRecipesEntity(mealType: String): List<MealRecipesEntity> {
@@ -48,5 +48,5 @@ fun List<Recipe>.asMealRecipesEntity(mealType: String): List<MealRecipesEntity> 
             mealType = mealType,
             recipe = item
         )
-    }
+    }.sortedBy { it.recipeId }
 }

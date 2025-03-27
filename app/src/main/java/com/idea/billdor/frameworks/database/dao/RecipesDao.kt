@@ -21,4 +21,7 @@ interface RecipesDao {
 
     @Query("SELECT * FROM MEAL_RECIPES_LIST WHERE mealType = :mealType")
     fun getLocalMealRecipes(mealType: String): List<MealRecipesEntity>
+
+    @Query("DELETE FROM MEAL_RECIPES_LIST WHERE mealType = :mealType")
+    fun deleteLocalMealRecipes(mealType: String)
 }
