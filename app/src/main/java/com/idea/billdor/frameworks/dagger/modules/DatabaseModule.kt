@@ -12,6 +12,8 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
 
+    const val DATABASE_NAME = "tokyo_athena.db"
+
     @Provides
     fun providesBillDorDatabase(@ApplicationContext context: Context): BillDorDatabase {
         return BillDorDatabase.getInstance(context = context)

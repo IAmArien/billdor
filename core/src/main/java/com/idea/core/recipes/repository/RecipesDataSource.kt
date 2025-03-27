@@ -11,4 +11,6 @@ interface RecipesDataSource {
     suspend fun getMealRecipesAsync(meal: String): ResponseWrapper<Recipes>
 
     suspend fun getLocalRecipes(): ResponseWrapper<List<Recipe>>
+
+    suspend fun getLocalMealRecipes(meal: String): ResponseWrapper<List<Recipe>>
 }

@@ -4,6 +4,7 @@ import com.idea.billdor.frameworks.dagger.qualifiers.CoreRecipesRepository
 import com.idea.billdor.frameworks.datasource.RecipesUseCases
 import com.idea.core.recipes.repository.RecipesRepository
 import com.idea.core.recipes.usecases.GetAllRecipesAsync
+import com.idea.core.recipes.usecases.GetLocalMealRecipes
 import com.idea.core.recipes.usecases.GetLocalRecipes
 import com.idea.core.recipes.usecases.GetMealRecipesAsync
 import dagger.Module
@@ -20,7 +21,8 @@ object UseCasesModule {
         return RecipesUseCases(
             getAllRecipesAsync = GetAllRecipesAsync(repository = repository),
             getMealRecipesAsync = GetMealRecipesAsync(repository = repository),
-            getLocalRecipes = GetLocalRecipes(repository = repository)
+            getLocalRecipes = GetLocalRecipes(repository = repository),
+            getLocalMealRecipes = GetLocalMealRecipes(repository = repository)
         )
     }
 }

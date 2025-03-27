@@ -40,7 +40,6 @@ class MainActivity : ComponentActivity(), ITopAppBarNavigation, IBottomAppBarNav
         enableEdgeToEdge()
         setContent { BillDorTheme { InternalMainScreenBuilder() } }
         lifecycleScope.launch { collectMealTypeState() }
-        recipesViewModel.getLocalRecipes()
     }
 
     @Composable
@@ -83,18 +82,20 @@ class MainActivity : ComponentActivity(), ITopAppBarNavigation, IBottomAppBarNav
     override fun onMyProfileClick() {
         bottomAppBarViewModel.setSelectedItem(BottomAppBarState.MyProfile())
     }
-    
+
     private suspend fun collectMealTypeState() {
         recipesViewModel.selectedMealType.collectLatest { state ->
             when (state) {
                 is MealTypeState.All -> {
                     recipesViewModel.getAllRecipesAsync()
+                    recipesViewModel.getLocalRecipes()
                 }
                 is MealTypeState.Snacks,
                 is MealTypeState.Dinner,
                 is MealTypeState.Lunch,
                 is MealTypeState.Breakfast -> {
                     recipesViewModel.getMealRecipesAsync(meal = state.type)
+                    recipesViewModel.getLocalMealRecipes(meal = state.type)
                 }
             }
         }

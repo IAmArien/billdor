@@ -2,6 +2,8 @@ package com.idea.billdor.repository.recipes
 
 import androidx.room.withTransaction
 import com.idea.billdor.frameworks.api.RecipesApi
+import com.idea.billdor.frameworks.database.entities.asMealRecipeList
+import com.idea.billdor.frameworks.database.entities.asMealRecipesEntity
 import com.idea.billdor.frameworks.database.entities.asRecipeList
 import com.idea.billdor.frameworks.database.entities.asRecipesEntity
 import com.idea.billdor.frameworks.database.room.BillDorDatabase
@@ -21,17 +23,36 @@ class RecipesRepository @Inject constructor(
 
     suspend fun getMealRecipesAsync(meal: String) = safeApiCall {
         val response = api.getMealRecipesAsync(meal = meal).await()
-        response
+        response.apply {
+            insertMealRecipes(
+                mealType = meal,
+                response = this
+            )
+        }
     }
 
     suspend fun getLocalRecipes() = safeApiCall {
         db.recipesDao.getLocalRecipes().asRecipeList()
     }
 
+    suspend fun getLocalMealRecipes(meal: String) = safeApiCall {
+        db.recipesDao.getLocalMealRecipes(mealType = meal).asMealRecipeList()
+    }
+
     private suspend fun insertRecipes(response: Recipes) = safeCatching {
         db.apply {
             withTransaction {
                 recipesDao.insertRecipes(recipes = response.recipes.asRecipesEntity())
+            }
+        }
+    }
+
+    private suspend fun insertMealRecipes(mealType: String, response: Recipes) = safeCatching {
+        db.apply {
+            withTransaction {
+                recipesDao.insertMealRecipes(
+                    recipes = response.recipes.asMealRecipesEntity(mealType = mealType)
+                )
             }
         }
     }

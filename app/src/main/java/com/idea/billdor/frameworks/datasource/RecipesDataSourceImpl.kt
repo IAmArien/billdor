@@ -21,4 +21,8 @@ class RecipesDataSourceImpl @Inject constructor(private val repository: RecipesR
     override suspend fun getLocalRecipes(): ResponseWrapper<List<Recipe>> {
         return repository.getLocalRecipes()
     }
+    
+    override suspend fun getLocalMealRecipes(meal: String): ResponseWrapper<List<Recipe>> {
+        return repository.getLocalMealRecipes(meal = meal)
+    }
 }
