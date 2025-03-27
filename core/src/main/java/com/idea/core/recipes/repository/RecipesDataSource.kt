@@ -6,4 +6,6 @@ import com.idea.core.recipes.data.Recipes
 interface RecipesDataSource {
     
     suspend fun getAllRecipesAsync(): ResponseWrapper<Recipes>
+
+    suspend fun getMealRecipesAsync(meal: String): ResponseWrapper<Recipes>
 }

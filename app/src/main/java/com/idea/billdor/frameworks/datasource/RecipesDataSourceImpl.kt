@@ -12,4 +12,8 @@ class RecipesDataSourceImpl @Inject constructor(private val repository: RecipesR
     override suspend fun getAllRecipesAsync(): ResponseWrapper<Recipes> {
         return repository.getAllRecipesAsync()
     }
+    
+    override suspend fun getMealRecipesAsync(meal: String): ResponseWrapper<Recipes> {
+        return repository.getMealRecipesAsync(meal = meal)
+    }
 }

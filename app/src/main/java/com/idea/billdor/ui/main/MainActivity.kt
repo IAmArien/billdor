@@ -87,8 +87,16 @@ class MainActivity : ComponentActivity(), ITopAppBarNavigation, IBottomAppBarNav
     
     private suspend fun collectMealTypeState() {
         recipesViewModel.selectedMealType.collectLatest { state ->
-            if (state == MealTypeState.All()) {
-                recipesViewModel.getAllRecipesAsync()
+            when (state) {
+                is MealTypeState.All -> {
+                    recipesViewModel.getAllRecipesAsync()
+                }
+                is MealTypeState.Snacks,
+                is MealTypeState.Dinner,
+                is MealTypeState.Lunch,
+                is MealTypeState.Breakfast -> {
+                    recipesViewModel.getMealRecipesAsync(meal = state.type)
+                }
             }
         }
     }

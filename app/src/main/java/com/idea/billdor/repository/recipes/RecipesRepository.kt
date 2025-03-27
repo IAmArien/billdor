@@ -10,4 +10,9 @@ class RecipesRepository @Inject constructor(private val api: RecipesApi) : BaseR
         val response = api.getAllRecipesAsync().await()
         response
     }
+
+    suspend fun getMealRecipesAsync(meal: String) = safeApiCall {
+        val response = api.getMealRecipesAsync(meal = meal).await()
+        response
+    }
 }

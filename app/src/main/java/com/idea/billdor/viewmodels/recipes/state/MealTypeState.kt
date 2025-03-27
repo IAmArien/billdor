@@ -8,22 +8,22 @@ sealed class MealTypeState (val type: String, val label: String) {
     ) : MealTypeState(type = name, label = text)
 
     data class Breakfast(
-        val name: String = "Breakfast",
+        val name: String = "breakfast",
         val text: String = "For Breakfast"
     ) : MealTypeState(type = name, label = text)
 
     data class Lunch(
-        val name: String = "Lunch",
+        val name: String = "lunch",
         val text: String = "For Lunch"
     ) : MealTypeState(type = name, label = text)
 
     data class Dinner(
-        val name: String = "Dinner",
+        val name: String = "dinner",
         val text: String = "For Dinner"
     ) : MealTypeState(type = name, label = text)
 
     data class Snacks(
-        val name: String = "Snacks",
+        val name: String = "snack",
         val text: String = "For Snacks"
     ) : MealTypeState(type = name, label = text)
 }
