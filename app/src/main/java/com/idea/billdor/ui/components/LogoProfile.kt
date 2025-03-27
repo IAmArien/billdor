@@ -31,6 +31,7 @@ import com.idea.billdor.ui.theme.Black
 import com.idea.billdor.ui.theme.FontFamily
 import com.idea.billdor.ui.theme.SelectiveYellow
 import com.idea.billdor.viewmodels.recipes.RecipesViewModel
+import com.idea.billdor.viewmodels.recipes.state.RecipeState
 
 @Composable
 fun LogoProfile(
@@ -40,6 +41,8 @@ fun LogoProfile(
     onClick: (() -> Unit)? = null
 ) {
     val selectedMealType = recipesViewModel.selectedMealType.collectAsState()
+    val recipeState = recipesViewModel.recipeState.collectAsState()
+    val isLoading = recipeState.value is RecipeState.Loading
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -74,7 +77,7 @@ fun LogoProfile(
             )
         }
         Text(
-            text = selectedMealType.value.label,
+            text = if (isLoading) "Loading..." else selectedMealType.value.label,
             style = TextStyle(
                 color = Black,
                 fontSize = 18.sp,

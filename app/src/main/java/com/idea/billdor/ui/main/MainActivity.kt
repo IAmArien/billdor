@@ -11,9 +11,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
-import com.google.gson.Gson
-import com.idea.billdor.mocks.mockRecipeResponse
 import com.idea.billdor.ui.components.BottomAppBarNavigation
 import com.idea.billdor.ui.components.IBottomAppBarNavigation
 import com.idea.billdor.ui.components.ITopAppBarNavigation
@@ -24,8 +23,10 @@ import com.idea.billdor.ui.theme.CoolWhite
 import com.idea.billdor.viewmodels.navigation.BottomAppBarViewModel
 import com.idea.billdor.viewmodels.navigation.state.BottomAppBarState
 import com.idea.billdor.viewmodels.recipes.RecipesViewModel
-import com.idea.core.recipes.data.Recipes
+import com.idea.billdor.viewmodels.recipes.state.MealTypeState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @AndroidEntryPoint
@@ -38,9 +39,9 @@ class MainActivity : ComponentActivity(), ITopAppBarNavigation, IBottomAppBarNav
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent { BillDorTheme { InternalMainScreenBuilder() } }
-        recipesViewModel.setRecipeList(
-            Gson().fromJson(mockRecipeResponse, Recipes::class.java).recipes
-        )
+        lifecycleScope.launch {
+            collectMealTypeState()
+        }
     }
 
     @Composable
@@ -82,5 +83,13 @@ class MainActivity : ComponentActivity(), ITopAppBarNavigation, IBottomAppBarNav
 
     override fun onMyProfileClick() {
         bottomAppBarViewModel.setSelectedItem(BottomAppBarState.MyProfile())
+    }
+    
+    private suspend fun collectMealTypeState() {
+        recipesViewModel.selectedMealType.collectLatest { state ->
+            if (state == MealTypeState.All()) {
+                recipesViewModel.getAllRecipesAsync()
+            }
+        }
     }
 }

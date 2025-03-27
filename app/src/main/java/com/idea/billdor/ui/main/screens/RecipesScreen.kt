@@ -18,8 +18,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.idea.billdor.R
 import com.idea.billdor.ui.components.RecipeItem
+import com.idea.billdor.ui.effects.rememberLazyStaggeredGridReachEndState
 import com.idea.billdor.ui.theme.BridalHealth
 import com.idea.billdor.ui.theme.CoolWhite
 import com.idea.billdor.ui.theme.SelectiveYellow
@@ -40,6 +43,8 @@ import com.idea.billdor.ui.theme.SilverSand
 import com.idea.billdor.ui.theme.White
 import com.idea.billdor.viewmodels.recipes.RecipesViewModel
 import com.idea.billdor.viewmodels.recipes.state.MealTypeState
+import com.idea.billdor.viewmodels.recipes.state.RecipeState
+import timber.log.Timber
 
 @Composable
 private fun MealTypeItem(
@@ -130,7 +135,16 @@ private fun MealType(recipesViewModel: RecipesViewModel) {
 
 @Composable
 fun RecipesScreen(recipesViewModel: RecipesViewModel = viewModel<RecipesViewModel>()) {
-    val recipeList = recipesViewModel.recipeList.collectAsState()
+    val recipeState = recipesViewModel.recipeState.collectAsState().value
+    val staggeredGridState = rememberLazyStaggeredGridState()
+    val reachesEnd = rememberLazyStaggeredGridReachEndState(staggeredGridState)
+
+    LaunchedEffect(reachesEnd) {
+        if (reachesEnd) {
+            Timber.d("Reached end of the list")
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -140,17 +154,20 @@ fun RecipesScreen(recipesViewModel: RecipesViewModel = viewModel<RecipesViewMode
         MealType(recipesViewModel)
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Fixed(2),
+            state = staggeredGridState,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier
                 .padding(start = 12.dp, end = 12.dp)
                 .nestedScroll(rememberNestedScrollInteropConnection())
         ) {
             items(2) { Box(Modifier.padding(bottom = 12.dp)) }
-            items(recipeList.value) { recipe ->
-                RecipeItem(
-                    recipeItem = recipe,
-                    modifier = Modifier.padding(bottom = 12.dp)
-                )
+            if (recipeState is RecipeState.Success) {
+                items(recipeState.response.recipes) { recipe ->
+                    RecipeItem(
+                        recipeItem = recipe,
+                        modifier = Modifier.padding(bottom = 12.dp)
+                    )
+                }
             }
         }
     }
