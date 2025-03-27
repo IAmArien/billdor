@@ -4,9 +4,11 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.compose) apply false
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
+    alias(libs.plugins.kotlin.ksp) apply false
+    alias(libs.plugins.dagger.hilt.android.plugin) apply false
 }
 buildscript {
     dependencies {
-        classpath(libs.hilt.android.gradle.plugin)
+        classpath(libs.hilt.android.classpath.plugin)
     }
 }

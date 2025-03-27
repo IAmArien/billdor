@@ -3,7 +3,8 @@ accompanistInsets = "0.22.0-rc"
 agp = "8.9.0"
 coilCompose = "3.1.0"
 glideCompose = "1.0.0-beta01"
-hiltAndroidGradlePlugin = "2.38.1"
+hiltAndroidClassPathPlugin = "2.38.1"
+hiltAndroidPlugin = "2.51.1"
 kotlin = "2.0.21"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -24,7 +25,7 @@ lifecycleVersion = "2.8.7"
 room = "2.6.1"
 roomKtxPaging = "2.6.1"
 kspDevtools = "2.0.21-1.0.27"
-daggerHilt = "2.38.1"
+daggerHilt = "2.51.1"
 navigation = "2.8.9"
 jetbrainsKotlinJvm = "2.0.21"
 
@@ -35,7 +36,7 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
 glide-compose = { module = "com.github.bumptech.glide:compose", version.ref = "glideCompose" }
-hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltAndroidGradlePlugin" }
+hilt-android-classpath-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltAndroidClassPathPlugin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -68,7 +69,7 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtxPaging" }
 room-paging = { group = "androidx.room", name = "room-paging", version.ref = "roomKtxPaging" }
 dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt" }
-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "daggerHilt" }
+dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "daggerHilt" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 
 [plugins]
@@ -78,3 +79,4 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 kotlin-kapt = { id = "kotlin-kapt" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kspDevtools" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+dagger-hilt-android-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroidPlugin" }

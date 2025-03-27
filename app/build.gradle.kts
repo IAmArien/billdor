@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.dagger.hilt.android.plugin)
 }
 
 android {
@@ -97,7 +98,7 @@ dependencies {
 
     // Dagger Hilt
     implementation(libs.dagger.hilt)
-    ksp(libs.dagger.hilt.compiler)
+    kapt(libs.dagger.hilt.compiler)
 
     // Compose Navigation (NavHost)
     implementation(libs.navigation.compose)
