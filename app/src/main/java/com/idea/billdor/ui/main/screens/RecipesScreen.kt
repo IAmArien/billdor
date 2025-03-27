@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.idea.billdor.R
 import com.idea.billdor.ui.components.RecipeItem
+import com.idea.billdor.ui.components.RecipeItemPlaceholder
 import com.idea.billdor.ui.effects.rememberLazyStaggeredGridReachEndState
 import com.idea.billdor.ui.theme.BridalHealth
 import com.idea.billdor.ui.theme.CoolWhite
@@ -182,13 +183,24 @@ fun RecipesScreen(
                 .nestedScroll(rememberNestedScrollInteropConnection())
         ) {
             items(2) { Box(Modifier.padding(bottom = 12.dp)) }
-            if (recipeState is RecipeState.Success) {
-                items(recipeState.response.recipes) { recipe ->
-                    RecipeItem(
-                        recipeItem = recipe,
-                        modifier = Modifier.padding(bottom = 12.dp)
-                    )
+            when (recipeState) {
+                is RecipeState.Success -> {
+                    if (recipeState.response.recipes.isNotEmpty()) {
+                        items(recipeState.response.recipes) { recipe ->
+                            RecipeItem(
+                                recipeItem = recipe,
+                                modifier = Modifier.padding(bottom = 12.dp)
+                            )
+                        }
+                    } else {
+                        items(6) { RecipeItemPlaceholder() }
+                    }
                 }
+                is RecipeState.Loading,
+                is RecipeState.Default -> {
+                    items(6) { RecipeItemPlaceholder() }
+                }
+                else -> { }
             }
         }
     }

@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
@@ -45,6 +46,30 @@ import com.idea.billdor.ui.theme.SelectiveYellow
 import com.idea.billdor.ui.theme.SilverSand
 import com.idea.billdor.ui.theme.White
 import com.idea.core.recipes.data.Recipe
+
+@Composable
+fun RecipeItemPlaceholder() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(230.dp)
+                .wrapContentHeight()
+                .background(
+                    color = Color(0xFFFFFFFF),
+                    shape = RoundedCornerShape(12.dp)
+                )
+                .clip(RoundedCornerShape(12.dp))
+        ) {
+            Box(modifier = Modifier.height(230.dp))
+        }
+        Box(modifier = Modifier.height(12.dp))
+    }
+}
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
