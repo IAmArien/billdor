@@ -55,6 +55,27 @@ class RecipesViewModel @Inject constructor(private val useCases: RecipesUseCases
         }
     }
 
+    fun getLocalRecipes() {
+        _recipeState.value = RecipeState.Loading
+        viewModelScope.launch {
+            when (val response = useCases.getLocalRecipes.invoke()) {
+                is ResponseWrapper.ResponseSuccess -> {
+                    _recipeState.value = RecipeState.Success(
+                        response = Recipes(
+                            recipes = response.value,
+                            total = response.value.size.toLong(),
+                            skip = 0,
+                            limit = 10
+                        )
+                    )
+                }
+                else -> {
+                    _recipeState.value = RecipeState.Failure(null)
+                }
+            }
+        }
+    }
+
     fun setSelectedMealType(type: MealTypeState) {
         _selectedMealType.value = type
     }

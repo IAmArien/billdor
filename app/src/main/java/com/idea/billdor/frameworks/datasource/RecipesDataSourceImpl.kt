@@ -2,6 +2,7 @@ package com.idea.billdor.frameworks.datasource
 
 import com.idea.billdor.repository.recipes.RecipesRepository
 import com.idea.core.ResponseWrapper
+import com.idea.core.recipes.data.Recipe
 import com.idea.core.recipes.data.Recipes
 import com.idea.core.recipes.repository.RecipesDataSource
 import javax.inject.Inject
@@ -15,5 +16,9 @@ class RecipesDataSourceImpl @Inject constructor(private val repository: RecipesR
     
     override suspend fun getMealRecipesAsync(meal: String): ResponseWrapper<Recipes> {
         return repository.getMealRecipesAsync(meal = meal)
+    }
+
+    override suspend fun getLocalRecipes(): ResponseWrapper<List<Recipe>> {
+        return repository.getLocalRecipes()
     }
 }

@@ -55,4 +55,12 @@ open class BaseRepository : ApiErrorHandler() {
             }
         }
     }
+
+    suspend fun safeCatching(callback: suspend () -> Unit) {
+        try {
+            withContext(Dispatchers.IO) { callback.invoke() }
+        } catch (error: Throwable) {
+            Timber.e(error)
+        }
+    }
 }

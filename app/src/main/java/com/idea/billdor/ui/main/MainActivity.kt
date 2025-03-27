@@ -39,9 +39,8 @@ class MainActivity : ComponentActivity(), ITopAppBarNavigation, IBottomAppBarNav
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent { BillDorTheme { InternalMainScreenBuilder() } }
-        lifecycleScope.launch {
-            collectMealTypeState()
-        }
+        lifecycleScope.launch { collectMealTypeState() }
+        recipesViewModel.getLocalRecipes()
     }
 
     @Composable
