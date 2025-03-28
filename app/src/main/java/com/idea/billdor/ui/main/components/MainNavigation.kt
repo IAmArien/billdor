@@ -39,7 +39,10 @@ fun MainNavigation(
             )
         }
         composable(route = BottomAppBarState.Tags().name) {
-            TagsScreen()
+            TagsScreen(
+                recipesViewModel = recipesViewModel,
+                snackBarHostState = snackBarHostState
+            )
         }
         composable(route = BottomAppBarState.MyProfile().name) {
             MyProfileScreen()

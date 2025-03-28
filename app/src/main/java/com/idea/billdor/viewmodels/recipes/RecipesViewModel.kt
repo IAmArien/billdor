@@ -5,6 +5,7 @@ import com.idea.billdor.frameworks.datasource.RecipesUseCases
 import com.idea.billdor.viewmodels.BaseViewModel
 import com.idea.billdor.viewmodels.recipes.state.MealTypeState
 import com.idea.billdor.viewmodels.recipes.state.RecipeState
+import com.idea.billdor.viewmodels.recipes.state.RecipeTagState
 import com.idea.core.ResponseWrapper
 import com.idea.core.recipes.data.Recipes
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,6 +28,11 @@ class RecipesViewModel @Inject constructor(private val useCases: RecipesUseCases
         MutableStateFlow(RecipeState.Default)
     val recipeState: StateFlow<RecipeState>
         get() = _recipeState
+
+    private val _recipeTagsState: MutableStateFlow<RecipeTagState> =
+        MutableStateFlow(RecipeTagState.Default)
+    val recipeTagsState: StateFlow<RecipeTagState>
+        get() = _recipeTagsState
 
     private val _errorEncountered: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val errorEncountered: StateFlow<Boolean>
@@ -75,6 +81,22 @@ class RecipesViewModel @Inject constructor(private val useCases: RecipesUseCases
                 else -> {
                     setErrorEncountered(error = true)
                     getLocalMealRecipes(meal = meal)
+                }
+            }
+        }
+    }
+
+    fun getAllRecipeTagsAsync() {
+        _recipeTagsState.value = RecipeTagState.Loading
+        viewModelScope.launch {
+            when (val response = useCases.getAllRecipeTagsAsync.invoke()) {
+                is ResponseWrapper.ResponseSuccess<List<String>> -> {
+                    _recipeTagsState.value = RecipeTagState.Success(
+                        response = response.value
+                    )
+                }
+                else -> {
+                    _recipeTagsState.value = RecipeTagState.Failure(null)
                 }
             }
         }

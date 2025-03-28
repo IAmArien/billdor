@@ -124,14 +124,18 @@ private fun RecipeItemImage(height: Int = 250, recipeItem: Recipe) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun RecipeItemTags(recipeItem: Recipe) {
-    if (recipeItem.tags.isNotEmpty()) {
+fun RecipeItemTags(
+    recipeItemTags: List<String>,
+    modifier: Modifier = Modifier,
+    onClick: ((String) -> Unit)? = null
+) {
+    if (recipeItemTags.isNotEmpty()) {
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp),
-            modifier = Modifier.testTag(tag = "recipe-item-tags-flow-row-container")
+            modifier = modifier.testTag(tag = "recipe-item-tags-flow-row-container")
         ) {
-            recipeItem.tags.forEachIndexed { index, tagItem ->
+            recipeItemTags.forEachIndexed { index, tagItem ->
                 Box(
                     modifier = Modifier
                         .testTag(tag = "recipe-item-tags-$tagItem-$index")
@@ -142,6 +146,10 @@ private fun RecipeItemTags(recipeItem: Recipe) {
                             color = SilverSand,
                             shape = RoundedCornerShape(6.dp)
                         )
+                        .clip(shape = RoundedCornerShape(6.dp))
+                        .clickable {
+                            onClick?.invoke(tagItem)
+                        }
                 ) {
                     Text(
                         text = tagItem,
@@ -563,7 +571,7 @@ fun RecipeItemOverview(
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
-            RecipeItemTags(recipeItem = recipeItem)
+            RecipeItemTags(recipeItemTags = recipeItem.tags)
             RecipeItemIngredients(isOverView = true, recipeItem = recipeItem)
             RecipeItemNutritionFactsDescription(isOverView = true, recipeItem = recipeItem)
         }
@@ -599,7 +607,7 @@ fun RecipeItem(modifier: Modifier = Modifier, recipeItem: Recipe) {
                         fontFamily = FontFamily
                     )
                 )
-                RecipeItemTags(recipeItem = recipeItem)
+                RecipeItemTags(recipeItemTags = recipeItem.tags)
                 RecipeItemIngredients(
                     title = "Ingredients",
                     isOverView = false,

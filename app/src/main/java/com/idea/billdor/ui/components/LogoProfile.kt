@@ -30,6 +30,8 @@ import com.idea.billdor.R
 import com.idea.billdor.ui.theme.Black
 import com.idea.billdor.ui.theme.FontFamily
 import com.idea.billdor.ui.theme.SelectiveYellow
+import com.idea.billdor.viewmodels.navigation.BottomAppBarViewModel
+import com.idea.billdor.viewmodels.navigation.state.BottomAppBarState
 import com.idea.billdor.viewmodels.recipes.RecipesViewModel
 import com.idea.billdor.viewmodels.recipes.state.RecipeState
 
@@ -37,9 +39,11 @@ import com.idea.billdor.viewmodels.recipes.state.RecipeState
 fun LogoProfile(
     modifier: Modifier = Modifier,
     containerModifier: Modifier = Modifier,
+    bottomAppBarViewModel: BottomAppBarViewModel = viewModel(),
     recipesViewModel: RecipesViewModel = viewModel(),
     onClick: (() -> Unit)? = null
 ) {
+    val selectedItem = bottomAppBarViewModel.selectedItem.collectAsState()
     val selectedMealType = recipesViewModel.selectedMealType.collectAsState()
     val recipeState = recipesViewModel.recipeState.collectAsState()
     val isLoading = recipeState.value is RecipeState.Loading
@@ -77,7 +81,17 @@ fun LogoProfile(
             )
         }
         Text(
-            text = if (isLoading) "Loading..." else selectedMealType.value.label,
+            text = when (selectedItem.value) {
+                is BottomAppBarState.Recipes -> {
+                    if (isLoading) "Loading..." else selectedMealType.value.label
+                }
+                is BottomAppBarState.Tags -> {
+                    "Recipe Tags"
+                }
+                is BottomAppBarState.MyProfile -> {
+                    "My Profile"
+                }
+            },
             style = TextStyle(
                 color = Black,
                 fontSize = 18.sp,

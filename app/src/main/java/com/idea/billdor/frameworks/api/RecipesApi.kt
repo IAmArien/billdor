@@ -13,4 +13,7 @@ interface RecipesApi {
     fun getMealRecipesAsync(
         @Path("mealType") meal: String
     ): Deferred<Recipes>
+
+    @GET("/recipes/tags")
+    fun getAllRecipeTagsAsync(): Deferred<List<String>>
 }

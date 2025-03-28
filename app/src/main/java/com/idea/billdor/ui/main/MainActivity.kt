@@ -83,6 +83,7 @@ class MainActivity : ComponentActivity(), ITopAppBarNavigation, IBottomAppBarNav
 
     override fun onTagsClick() {
         bottomAppBarViewModel.setSelectedItem(BottomAppBarState.Tags())
+        recipesViewModel.getAllRecipeTagsAsync()
     }
 
     override fun onMyProfileClick() {
