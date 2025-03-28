@@ -18,17 +18,12 @@ class RecipesRepository @Inject constructor(
 
     suspend fun getAllRecipesAsync() = safeApiCall {
         val response = api.getAllRecipesAsync().await()
-        response.apply { insertRecipes(this) }
+        response.apply { insertRecipes() }
     }
 
     suspend fun getMealRecipesAsync(meal: String) = safeApiCall {
         val response = api.getMealRecipesAsync(meal = meal).await()
-        response.apply {
-            insertMealRecipes(
-                mealType = meal,
-                response = this
-            )
-        }
+        response.apply { insertMealRecipes(mealType = meal) }
     }
 
     suspend fun getAllRecipeTagsAsync() = safeApiCall {
@@ -49,20 +44,20 @@ class RecipesRepository @Inject constructor(
         db.recipesDao.getLocalMealRecipes(mealType = meal).asMealRecipeList()
     }
 
-    private suspend fun insertRecipes(response: Recipes) = safeCatching {
+    private suspend fun Recipes.insertRecipes() = safeCatching {
         db.apply {
             withTransaction {
-                recipesDao.insertRecipes(recipes = response.recipes.asRecipesEntity())
+                recipesDao.insertRecipes(recipes = recipes.asRecipesEntity())
             }
         }
     }
 
-    private suspend fun insertMealRecipes(mealType: String, response: Recipes) = safeCatching {
+    private suspend fun Recipes.insertMealRecipes(mealType: String) = safeCatching {
         db.apply {
             withTransaction {
                 recipesDao.deleteLocalMealRecipes(mealType = mealType)
                 recipesDao.insertMealRecipes(
-                    recipes = response.recipes.asMealRecipesEntity(mealType = mealType)
+                    recipes = recipes.asMealRecipesEntity(mealType = mealType)
                 )
             }
         }
