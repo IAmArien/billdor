@@ -19,3 +19,8 @@ Android application built with Kotlin and Jetpack Compose along with MVVM Clean 
 - Target SDK: 35
 - Gradle Distribution Version: 8.11.1
 - Kotlin Core Version: 1.15.0
+
+## Sample Screenshots
+![Screenshot_1743174770](https://github.com/user-attachments/assets/1bdd88db-4cd7-4966-aa35-7c23f0efa2ed)
+![Screenshot_1743186730](https://github.com/user-attachments/assets/cc89e385-5a3f-4589-a130-97a0ef955e3a)
+
