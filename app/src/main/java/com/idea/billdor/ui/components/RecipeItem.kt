@@ -285,7 +285,8 @@ private fun RecipeItemInstructions(recipeItem: Recipe) {
             fontWeight = FontWeight.Normal,
             fontStyle = FontStyle.Normal,
             fontFamily = FontFamily
-        )
+        ),
+        modifier = Modifier.testTag(tag = "recipe-item-instructions-text")
     )
 }
 

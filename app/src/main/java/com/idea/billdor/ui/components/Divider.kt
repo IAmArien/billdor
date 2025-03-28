@@ -3,6 +3,7 @@ package com.idea.billdor.ui.components
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -19,9 +20,11 @@ fun Divider(
     orientation: DividerOrientation = DividerOrientation.Horizontal
 ) {
     val reusableModifier = if (orientation === DividerOrientation.Horizontal) {
-        modifier.width(12.dp).testTag(tag = "divider")
+        modifier.width(12.dp).testTag(tag = "divider-horizontal")
     } else {
-        modifier.height(12.dp).testTag(tag = "divider")
+        modifier.height(12.dp).testTag(tag = "divider-vertical")
     }
-    Box(reusableModifier)
+    Box(reusableModifier) {
+        Text(text = "Test")
+    }
 }
