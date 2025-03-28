@@ -535,6 +535,7 @@ fun RecipeItemOverview(
 ) {
     Column(
         modifier = modifier
+            .testTag(tag = "recipe-item-overview-${recipeItem.name}")
             .fillMaxWidth()
             .wrapContentHeight()
             .background(
@@ -584,6 +585,7 @@ fun RecipeItemOverview(
 fun RecipeItem(modifier: Modifier = Modifier, recipeItem: Recipe) {
     LazyColumn(
         modifier = modifier
+            .testTag(tag = "recipe-item-info-container")
             .fillMaxWidth()
             .wrapContentHeight()
             .background(color = White)

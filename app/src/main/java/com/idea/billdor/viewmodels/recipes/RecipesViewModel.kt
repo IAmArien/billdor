@@ -179,6 +179,10 @@ class RecipesViewModel @Inject constructor(private val useCases: RecipesUseCases
         _errorEncountered.value = error
     }
 
+    fun setRecipeState(state: RecipeState) {
+        _recipeState.value = state
+    }
+
     override fun onCleared() {
         super.onCleared()
         viewModelScope.cancel()
