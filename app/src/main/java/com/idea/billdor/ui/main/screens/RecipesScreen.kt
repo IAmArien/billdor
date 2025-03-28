@@ -1,141 +1,44 @@
 package com.idea.billdor.ui.main.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.idea.billdor.R
+import com.idea.billdor.ui.components.MealType
 import com.idea.billdor.ui.components.RecipeItem
+import com.idea.billdor.ui.components.RecipeItemOverview
 import com.idea.billdor.ui.components.RecipeItemPlaceholder
 import com.idea.billdor.ui.effects.rememberLazyStaggeredGridReachEndState
-import com.idea.billdor.ui.theme.BridalHealth
 import com.idea.billdor.ui.theme.CoolWhite
-import com.idea.billdor.ui.theme.SelectiveYellow
-import com.idea.billdor.ui.theme.SilverSand
-import com.idea.billdor.ui.theme.White
 import com.idea.billdor.viewmodels.recipes.RecipesViewModel
-import com.idea.billdor.viewmodels.recipes.state.MealTypeState
 import com.idea.billdor.viewmodels.recipes.state.RecipeState
+import com.idea.core.recipes.data.Recipe
 import timber.log.Timber
 
-@Composable
-private fun MealTypeItem(
-    recipesViewModel: RecipesViewModel,
-    mealTypeState: MealTypeState,
-    painter: Painter
-) {
-    val selectedMealType = recipesViewModel.selectedMealType.collectAsState()
-    val isSelected = selectedMealType.value.type === mealTypeState.type
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .width(80.dp)
-            .height(80.dp)
-            .border(
-                width = if (isSelected) 2.dp else 1.dp,
-                color = if (isSelected) SelectiveYellow else SilverSand,
-                shape = RoundedCornerShape(12.dp)
-            )
-            .background(color = if (isSelected) BridalHealth else White)
-            .clip(RoundedCornerShape(12.dp))
-            .clickable(
-                enabled = true,
-                onClick = {
-                    recipesViewModel.setSelectedMealType(mealTypeState)
-                }
-            )
-    ) {
-        Image(
-            painter = painter,
-            modifier = Modifier
-                .size(70.dp),
-            contentDescription = "meal-type-item",
-            contentScale = ContentScale.Fit
-        )
-    }
-}
-
-@Composable
-private fun MealType(recipesViewModel: RecipesViewModel) {
-    Column(modifier = Modifier.fillMaxWidth().background(color = White)) {
-        Row (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp)
-        ) {
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                item {
-                    MealTypeItem(
-                        recipesViewModel = recipesViewModel,
-                        mealTypeState = MealTypeState.All(),
-                        painter = painterResource(id = R.drawable.billdor_home_icon)
-                    )
-                }
-                item {
-                    MealTypeItem(
-                        recipesViewModel = recipesViewModel,
-                        mealTypeState = MealTypeState.Breakfast(),
-                        painter = painterResource(id = R.drawable.breakfast_icon)
-                    )
-                }
-                item {
-                    MealTypeItem(
-                        recipesViewModel = recipesViewModel,
-                        mealTypeState = MealTypeState.Lunch(),
-                        painter = painterResource(id = R.drawable.lunch_icon)
-                    )
-                }
-                item {
-                    MealTypeItem(
-                        recipesViewModel = recipesViewModel,
-                        mealTypeState = MealTypeState.Dinner(),
-                        painter = painterResource(id = R.drawable.dinner_icon)
-                    )
-                }
-                item {
-                    MealTypeItem(
-                        recipesViewModel = recipesViewModel,
-                        mealTypeState = MealTypeState.Snacks(),
-                        painter = painterResource(id = R.drawable.snacks_icon)
-                    )
-                }
-            }
-        }
-    }
-}
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipesScreen(
     recipesViewModel: RecipesViewModel = viewModel<RecipesViewModel>(),
@@ -145,6 +48,10 @@ fun RecipesScreen(
     val errorEncountered = recipesViewModel.errorEncountered.collectAsState().value
     val staggeredGridState = rememberLazyStaggeredGridState()
     val reachesEnd = rememberLazyStaggeredGridReachEndState(staggeredGridState)
+
+    val bottomSheetState = rememberModalBottomSheetState()
+    val showBottomSheet = remember { mutableStateOf(false) }
+    val selectedRecipeItem = remember { mutableStateOf<Recipe?>(null) }
 
     LaunchedEffect(reachesEnd) {
         if (reachesEnd) {
@@ -169,16 +76,18 @@ fun RecipesScreen(
 
     Column(
         modifier = Modifier
+            .testTag(tag = "recipes-screen-container")
             .fillMaxWidth()
             .fillMaxHeight()
             .background(color = CoolWhite)
     ) {
-        MealType(recipesViewModel)
+        MealType(recipesViewModel = recipesViewModel)
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Fixed(2),
             state = staggeredGridState,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier
+                .testTag(tag = "recipes-screen-vertical-staggered-grid")
                 .padding(start = 12.dp, end = 12.dp)
                 .nestedScroll(rememberNestedScrollInteropConnection())
         ) {
@@ -187,9 +96,13 @@ fun RecipesScreen(
                 is RecipeState.Success -> {
                     if (recipeState.response.recipes.isNotEmpty()) {
                         items(recipeState.response.recipes) { recipe ->
-                            RecipeItem(
+                            RecipeItemOverview(
                                 recipeItem = recipe,
-                                modifier = Modifier.padding(bottom = 12.dp)
+                                modifier = Modifier.padding(bottom = 12.dp),
+                                onClick = { recipeItem ->
+                                    selectedRecipeItem.value = recipeItem
+                                    showBottomSheet.value = true
+                                }
                             )
                         }
                     } else {
@@ -202,6 +115,15 @@ fun RecipesScreen(
                 }
                 else -> { }
             }
+        }
+    }
+
+    if (showBottomSheet.value && selectedRecipeItem.value !== null) {
+        ModalBottomSheet(
+            onDismissRequest = { showBottomSheet.value = false },
+            sheetState = bottomSheetState
+        ) {
+            RecipeItem(recipeItem = selectedRecipeItem.value!!)
         }
     }
 }
