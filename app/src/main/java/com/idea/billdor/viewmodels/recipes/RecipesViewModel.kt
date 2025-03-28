@@ -34,6 +34,11 @@ class RecipesViewModel @Inject constructor(private val useCases: RecipesUseCases
     val recipeTagsState: StateFlow<RecipeTagState>
         get() = _recipeTagsState
 
+    private val _recipeByTagState: MutableStateFlow<RecipeState> =
+        MutableStateFlow(RecipeState.Default)
+    val recipeByTagState: StateFlow<RecipeState>
+        get() = _recipeByTagState
+
     private val _errorEncountered: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val errorEncountered: StateFlow<Boolean>
         get() = _errorEncountered
@@ -97,6 +102,28 @@ class RecipesViewModel @Inject constructor(private val useCases: RecipesUseCases
                 }
                 else -> {
                     _recipeTagsState.value = RecipeTagState.Failure(null)
+                }
+            }
+        }
+    }
+
+    fun getRecipeByTagAsync(tag: String) {
+        recipesCoroutineJob?.cancel()
+        recipesCoroutineJob = viewModelScope.launch {
+            _recipeByTagState.value = RecipeState.Loading
+            when (val response = useCases.getRecipesByTagAsync.invoke(tag = tag)) {
+                is ResponseWrapper.ResponseSuccess<Recipes> -> {
+                    _recipeByTagState.value = RecipeState.Success(
+                        response = Recipes(
+                            recipes = response.value.recipes.sortedBy { it.id },
+                            total = response.value.recipes.size.toLong(),
+                            skip = 0,
+                            limit = 10
+                        )
+                    )
+                }
+                else -> {
+                    _recipeByTagState.value = RecipeState.Failure(null)
                 }
             }
         }

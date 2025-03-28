@@ -11,12 +11,13 @@ import androidx.compose.ui.platform.testTag
 import com.idea.billdor.ui.theme.SelectiveYellow
 
 @Composable
-fun LoadingContainer() {
+fun LoadingContainer(modifier: Modifier = Modifier) {
     Box(
         modifier = Modifier
             .testTag(tag = "loading-container")
             .fillMaxWidth()
             .fillMaxHeight()
+            .then(modifier)
     ) {
         CircularProgressIndicator(
             color = SelectiveYellow,

@@ -36,6 +36,11 @@ class RecipesRepository @Inject constructor(
         response
     }
 
+    suspend fun getRecipesByTagAsync(tag: String) = safeApiCall {
+        val response = api.getRecipesByTagAsync(tag = tag).await()
+        response
+    }
+
     suspend fun getLocalRecipes() = safeApiCall {
         db.recipesDao.getLocalRecipes().asRecipeList()
     }

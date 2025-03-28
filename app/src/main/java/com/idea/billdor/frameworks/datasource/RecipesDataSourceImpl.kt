@@ -22,6 +22,10 @@ class RecipesDataSourceImpl @Inject constructor(private val repository: RecipesR
         return repository.getAllRecipeTagsAsync()
     }
 
+    override suspend fun getRecipesByTagAsync(tag: String): ResponseWrapper<Recipes> {
+        return repository.getRecipesByTagAsync(tag = tag)
+    }
+
     override suspend fun getLocalRecipes(): ResponseWrapper<List<Recipe>> {
         return repository.getLocalRecipes()
     }

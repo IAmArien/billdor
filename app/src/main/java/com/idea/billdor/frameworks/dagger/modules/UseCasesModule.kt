@@ -8,6 +8,7 @@ import com.idea.core.recipes.usecases.GetAllRecipesAsync
 import com.idea.core.recipes.usecases.GetLocalMealRecipes
 import com.idea.core.recipes.usecases.GetLocalRecipes
 import com.idea.core.recipes.usecases.GetMealRecipesAsync
+import com.idea.core.recipes.usecases.GetRecipesByTagAsync
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,6 +24,7 @@ object UseCasesModule {
             getAllRecipesAsync = GetAllRecipesAsync(repository = repository),
             getMealRecipesAsync = GetMealRecipesAsync(repository = repository),
             getAllRecipeTagsAsync = GetAllRecipeTagsAsync(repository = repository),
+            getRecipesByTagAsync = GetRecipesByTagAsync(repository = repository),
             getLocalRecipes = GetLocalRecipes(repository = repository),
             getLocalMealRecipes = GetLocalMealRecipes(repository = repository)
         )
