@@ -27,10 +27,10 @@ import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.idea.billdor.ui.components.LoadingContainer
 import com.idea.billdor.ui.components.MealType
 import com.idea.billdor.ui.components.RecipeItem
 import com.idea.billdor.ui.components.RecipeItemOverview
-import com.idea.billdor.ui.components.RecipeItemPlaceholder
 import com.idea.billdor.ui.effects.rememberLazyStaggeredGridReachEndState
 import com.idea.billdor.ui.theme.CoolWhite
 import com.idea.billdor.viewmodels.recipes.RecipesViewModel
@@ -82,19 +82,19 @@ fun RecipesScreen(
             .background(color = CoolWhite)
     ) {
         MealType(recipesViewModel = recipesViewModel)
-        LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Fixed(2),
-            state = staggeredGridState,
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier
-                .testTag(tag = "recipes-screen-vertical-staggered-grid")
-                .padding(start = 12.dp, end = 12.dp)
-                .nestedScroll(rememberNestedScrollInteropConnection())
-        ) {
-            items(2) { Box(Modifier.padding(bottom = 12.dp)) }
-            when (recipeState) {
-                is RecipeState.Success -> {
-                    if (recipeState.response.recipes.isNotEmpty()) {
+        when (recipeState) {
+            is RecipeState.Success -> {
+                if (recipeState.response.recipes.isNotEmpty()) {
+                    LazyVerticalStaggeredGrid(
+                        columns = StaggeredGridCells.Fixed(2),
+                        state = staggeredGridState,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        modifier = Modifier
+                            .testTag(tag = "recipes-screen-vertical-staggered-grid")
+                            .padding(start = 12.dp, end = 12.dp)
+                            .nestedScroll(rememberNestedScrollInteropConnection())
+                    ) {
+                        items(2) { Box(Modifier.padding(bottom = 12.dp)) }
                         items(recipeState.response.recipes) { recipe ->
                             RecipeItemOverview(
                                 recipeItem = recipe,
@@ -105,16 +105,16 @@ fun RecipesScreen(
                                 }
                             )
                         }
-                    } else {
-                        items(6) { RecipeItemPlaceholder() }
                     }
+                } else {
+                    LoadingContainer()
                 }
-                is RecipeState.Loading,
-                is RecipeState.Default -> {
-                    items(6) { RecipeItemPlaceholder() }
-                }
-                else -> { }
             }
+            is RecipeState.Loading,
+            is RecipeState.Default -> {
+                LoadingContainer()
+            }
+            else -> { }
         }
     }
 

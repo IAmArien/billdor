@@ -30,7 +30,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -47,7 +46,9 @@ import androidx.core.app.ShareCompat
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import coil3.request.placeholder
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.idea.billdor.R
 import com.idea.billdor.app.BillDorApplication
 import com.idea.billdor.ui.theme.Black
 import com.idea.billdor.ui.theme.DarkLiver
@@ -68,6 +69,7 @@ private fun RecipeItemImage(height: Int = 250, recipeItem: Recipe) {
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
+                .placeholder(R.drawable.billdor_image_placeholder)
                 .data(recipeItem.image)
                 .crossfade(true)
                 .build(),
@@ -512,30 +514,6 @@ private fun RecipeItemNutritionFactsDescription(isOverView: Boolean, recipeItem:
                 )
             }
         }
-    }
-}
-
-@Composable
-fun RecipeItemPlaceholder() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(230.dp)
-                .wrapContentHeight()
-                .background(
-                    color = Color(0xFFFFFFFF),
-                    shape = RoundedCornerShape(12.dp)
-                )
-                .clip(RoundedCornerShape(12.dp))
-        ) {
-            Box(modifier = Modifier.height(230.dp))
-        }
-        Box(modifier = Modifier.height(12.dp))
     }
 }
 

@@ -35,11 +35,6 @@ open class ApiErrorHandler {
     
     private lateinit var apiErrorWrapper: ApiErrorWrapper
 
-    /**
-     * Function Used To Check Error When Failed To Get The Result From The API
-     * @param error A Throwable Exception Thrown While Performing Network Request
-     * @return Its Base Class
-     */
     fun checkError(error: Throwable): ApiErrorHandler {
         when (error) {
             is SocketTimeoutException -> {
